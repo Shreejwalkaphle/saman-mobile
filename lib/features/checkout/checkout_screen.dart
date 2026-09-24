@@ -23,6 +23,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _address = TextEditingController();
   final _phone = TextEditingController();
   final _locationService = LocationService();
+  final _checkoutIdempotencyKey = newRequestId();
   CustomerLocation? _location;
   Map<String, dynamic>? _quote;
   bool _busy = false;
@@ -92,7 +93,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     try {
       final order = await widget.api.post(
         '/api/orders/checkout',
-        headers: {'Idempotency-Key': newRequestId()},
+        headers: {'Idempotency-Key': _checkoutIdempotencyKey},
         body: {
           'addressLine1': _address.text.trim(),
           'addressLine2': null,

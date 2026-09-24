@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../cart/cart_screen.dart';
+import '../orders/order_list_screen.dart';
 import 'shop_products_screen.dart';
 
 class ShopListScreen extends StatefulWidget {
@@ -40,6 +41,14 @@ class _ShopListScreenState extends State<ShopListScreen> {
       appBar: AppBar(
         title: const Text('Biratnagar Shops'),
         actions: [
+          IconButton(
+            tooltip: 'Orders',
+            icon: const Icon(Icons.receipt_long_outlined),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => OrderListScreen(api: widget.api)),
+            ),
+          ),
           IconButton(
             tooltip: 'Cart',
             icon: const Icon(Icons.shopping_bag_outlined),
