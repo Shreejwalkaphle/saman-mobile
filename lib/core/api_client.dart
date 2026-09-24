@@ -37,8 +37,9 @@ class ApiClient {
   Future<Map<String, dynamic>> post(
     String path, {
     Map<String, dynamic>? body,
+    Map<String, String>? headers,
   }) async {
-    final result = await _send('POST', path, body: body);
+    final result = await _send('POST', path, body: body, extraHeaders: headers);
     return result as Map<String, dynamic>;
   }
 
@@ -50,10 +51,12 @@ class ApiClient {
     String method,
     String path, {
     Map<String, dynamic>? body,
+    Map<String, String>? extraHeaders,
   }) async {
     final headers = <String, String>{'Accept': 'application/json'};
     if (body != null) headers['Content-Type'] = 'application/json';
     if (token != null) headers['Authorization'] = 'Bearer $token';
+    if (extraHeaders != null) headers.addAll(extraHeaders);
 
     final uri = Uri.parse('$baseUrl$path');
     late http.Response response;

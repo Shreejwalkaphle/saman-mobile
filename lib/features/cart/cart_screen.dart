@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
+import '../checkout/checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({required this.api, super.key});
@@ -73,9 +74,33 @@ class _CartScreenState extends State<CartScreen> {
               top: false,
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text('Subtotal', style: Theme.of(context).textTheme.titleMedium),
-                  Text('NPR ${cart['total']}', style: Theme.of(context).textTheme.titleLarge),
+                child: Column(children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Text('Subtotal', style: Theme.of(context).textTheme.titleMedium),
+                    Text('NPR ${cart['total']}', style: Theme.of(context).textTheme.titleLarge),
+                  ]),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () async {
+                        final created = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CheckoutScreen(
+                              api: widget.api,
+                              subtotal: cart['total'] as num,
+                            ),
+                          ),
+                        );
+                        if (created == true && mounted) setState(() => _cart = _load());
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text('Continue to delivery'),
+                      ),
+                    ),
+                  ),
                 ]),
               ),
             ),

@@ -12,11 +12,13 @@ payment, or order-state decisions.
 - Shop product catalog
 - Add to cart
 - View and remove cart items
+- Foreground location permission and current GPS location
+- Server-calculated Biratnagar delivery quote
+- Idempotent checkout with quote, delivery fee, and total confirmation
 - Memory-only access token (logout on app restart)
 
-Checkout, delivery quote/location permission, secure persistent session,
-payment redirect/deep-link handling, order history, and push notifications are
-the next mobile slices.
+Secure persistent session, payment redirect/deep-link handling, order history,
+and push notifications are the next mobile slices.
 
 ## Local API addresses
 
