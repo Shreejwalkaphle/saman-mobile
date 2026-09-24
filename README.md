@@ -38,4 +38,9 @@ flutter pub get
 flutter analyze
 flutter test
 flutter build web --release --dart-define=API_BASE_URL=http://localhost:8080
+flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ```
+
+The Gradle wrapper uses Gradle's official `downloads.gradle.org` CDN directly.
+This avoids the standard `services.gradle.org` redirect to GitHub, which timed
+out from Java on the current Windows development machine.
