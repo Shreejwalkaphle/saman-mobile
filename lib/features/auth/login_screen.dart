@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
   });
 
   final ApiClient api;
-  final void Function(String token, String email) onAuthenticated;
+  final void Function(String email) onAuthenticated;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ? await widget.api.register(_email.text.trim(), _password.text)
           : await widget.api.login(_email.text.trim(), _password.text);
       widget.onAuthenticated(
-        response['token'] as String,
         response['email'] as String,
       );
     } on ApiException catch (error) {

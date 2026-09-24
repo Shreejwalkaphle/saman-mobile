@@ -5,26 +5,52 @@ import 'features/auth/login_screen.dart';
 import 'features/shop/shop_list_screen.dart';
 
 class SamanApp extends StatefulWidget {
-  const SamanApp({super.key});
+  const SamanApp({this.api, super.key});
+
+  final ApiClient? api;
 
   @override
   State<SamanApp> createState() => _SamanAppState();
 }
 
 class _SamanAppState extends State<SamanApp> {
-  final ApiClient _api = ApiClient();
+  late final ApiClient _api;
   String? _email;
+  bool _restoringSession = true;
 
-  void _onAuthenticated(String token, String email) {
+  @override
+  void initState() {
+    super.initState();
+    _api = widget.api ?? ApiClient();
+    _restoreSession();
+  }
+
+  Future<void> _restoreSession() async {
+    String? email;
+    try {
+      email = await _api.restoreSession();
+    } catch (_) {
+      // A temporary network failure must not erase a valid refresh token. The
+      // login screen remains available and the stored session can be retried on
+      // the next app launch.
+    }
+    if (!mounted) return;
     setState(() {
-      _api.token = token;
+      _email = email;
+      _restoringSession = false;
+    });
+  }
+
+  void _onAuthenticated(String email) {
+    setState(() {
       _email = email;
     });
   }
 
-  void _logout() {
+  Future<void> _logout() async {
+    await _api.logout();
+    if (!mounted) return;
     setState(() {
-      _api.token = null;
       _email = null;
     });
   }
@@ -45,7 +71,9 @@ class _SamanAppState extends State<SamanApp> {
           fillColor: Colors.white,
         ),
       ),
-      home: _email == null
+      home: _restoringSession
+          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+          : _email == null
           ? LoginScreen(api: _api, onAuthenticated: _onAuthenticated)
           : ShopListScreen(api: _api, email: _email!, onLogout: _logout),
     );
